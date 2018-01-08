@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SlackClient
 {
-    public class Class1
+    public class AppHome : Permission
     {
     }
 }
