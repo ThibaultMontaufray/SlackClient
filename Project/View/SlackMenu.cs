@@ -53,7 +53,7 @@ namespace SlackClient
             if (SlackAdapter.Channels != null)
             { 
                 TreeNode root = _treeViewChannels.Nodes.Add("Channels");
-                foreach (Channel item in SlackAdapter.Channels)
+                foreach (Channel item in SlackAdapter.Channels.Where(c => !c.Is_Archived && c.Is_Member))
                 {
                     tn = new TreeNode(item.Name);
                     tn.Tag = item;

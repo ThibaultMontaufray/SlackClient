@@ -74,9 +74,8 @@
             this._textBox.BackColor = System.Drawing.Color.WhiteSmoke;
             this._textBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this._textBox.Location = new System.Drawing.Point(63, 26);
-            this._textBox.Multiline = true;
             this._textBox.Name = "_textBox";
-            this._textBox.Size = new System.Drawing.Size(810, 28);
+            this._textBox.Size = new System.Drawing.Size(810, 41);
             this._textBox.TabIndex = 2;
             this._textBox.Text = "...";
             // 
@@ -92,7 +91,7 @@
             this.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "SlackMessage";
-            this.Size = new System.Drawing.Size(876, 57);
+            this.Size = new System.Drawing.Size(876, 70);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
