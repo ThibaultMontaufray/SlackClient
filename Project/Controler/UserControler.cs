@@ -29,5 +29,26 @@ namespace SlackClient
 
             return users == null ? null : users.Members;
         }
+        public static Status GetStatus(Member user)
+        {
+            Status status = null;
+
+            try
+            {
+                Dictionary<string, string> data = new Dictionary<string, string>();
+                data.Add("user", user.Id);
+                string answer = Accessor.JsonPostFormData(URL + ".getPresence", data);
+                Response response = Accessor.Deserialize<Response>(answer);
+                if (response.Ok)
+                {
+                    status = Accessor.Deserialize<Status>(answer);
+                }
+            }
+            catch
+            {
+            }
+
+            return status;
+        }
     }
 }

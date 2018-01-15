@@ -47,6 +47,12 @@ namespace SlackClient
             _slackMenu.OnChannelChanged += _slackMenu_OnChannelChanged;
             _slackMenu.OnUserChanged += _slackMenu_OnUserChanged;
             _slackInput.OnMessageSendingRequest += _slackInput_OnMessageSendingRequest;
+            
+            if (_slackAdapter.Channels.Count > 0)
+            {
+                Channel defaultChannel = _slackAdapter.Channels.Where(c => c.Name.ToLower().Equals("general")).Count() > 0 ? _slackAdapter.Channels.Where(c => c.Name.ToLower().Equals("general")).FirstOrDefault() : _slackAdapter.Channels.FirstOrDefault();
+                RefreshConversation(defaultChannel);
+            }
         }
         private void RefreshConversation(Channel channel)
         {

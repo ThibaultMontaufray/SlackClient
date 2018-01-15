@@ -31,11 +31,5 @@ namespace SlackClient
 
             return conversation;
         }
-        public static void Send(string channel, string ts, string message)
-        {
-            // token    Authentication token bearing required scopes.
-            // channel  Conversation ID to fetch thread from.
-            // ts 	    Unique identifier of a thread's parent message.
-        }
     }
 }

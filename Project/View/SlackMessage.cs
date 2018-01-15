@@ -63,6 +63,7 @@ namespace SlackClient
                 labelDate.Text = dtDateTime.ToString("hh:mm tt");
                 _textBox.Text = CleanText(_currentMessage.Text);
             }
+            AddSmileys();
         }
         #endregion
 
@@ -85,6 +86,40 @@ namespace SlackClient
             }
             text = text.Replace("<!channel>", "@Channel");
             return text;
+        }
+        private void AddSmileys()
+        {
+            try
+            {
+                ProcessSmiley("grinning");
+                ProcessSmiley("innocent");
+                ProcessSmiley("slightly_smiling_face");
+            }
+            catch (Exception exp)
+            {
+
+            }
+        }
+        private void ProcessSmiley(string smileyName)
+        {
+            while (_textBox.Text.Contains(string.Format(":{0}:", smileyName)))
+            {
+                _textBox.SelectionStart = _textBox.Find(string.Format(":{0}:", smileyName), RichTextBoxFinds.WholeWord);
+                _textBox.SelectionLength = string.Format(":{0}:", smileyName).Length;
+
+                Image img = (Image)Properties.Resources.ResourceManager.GetObject(smileyName);
+                
+                Bitmap bmp2 = new Bitmap(img.Width, img.Height);
+                Rectangle rect = new Rectangle(Point.Empty, img.Size);
+                using (Graphics G = Graphics.FromImage(bmp2))
+                {
+                    G.Clear(Color.White);
+                    G.DrawImageUnscaledAndClipped(img, rect);
+                }
+
+                Clipboard.SetImage(bmp2);
+                _textBox.Paste();
+            }
         }
         #endregion
     }

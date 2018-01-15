@@ -16,7 +16,13 @@ namespace SlackClient
         #region Attributes
         public event SlackMenuEventHandler OnChannelChanged;
         public event SlackMenuEventHandler OnUserChanged;
+        public event SlackMenuEventHandler OnChannelsLoaded;
+        public event SlackMenuEventHandler OnUsersLoaded;
+        public event SlackMenuEventHandler OnInfoLoaded;
         private SlackAdapter _slackAdapter;
+
+        private TreeView _tmpTnChannels;
+        private TreeView _tmpTnUsers;
         #endregion
 
         #region Properties
@@ -31,67 +37,162 @@ namespace SlackClient
         public SlackMenu()
         {
             InitializeComponent();
+            Init();
         }
         #endregion
 
         #region Methods public
-        public void LoadData(SlackAdapter slackAdapter)
+        public async void LoadData(SlackAdapter slackAdapter)
         {
-            _slackAdapter = slackAdapter;
-            LoadChannels();
-            LoadUsers();
-            LoadInfo();
+            try
+            {
+                _slackAdapter = slackAdapter;
+
+                Task tInfo = new Task(LoadInfo);
+                tInfo.Start();
+                await tInfo;
+                OnInfoLoaded?.Invoke(null);
+
+                Task tChannels = new Task(LoadChannels);
+                tChannels.Start();
+                await tChannels;
+                OnChannelsLoaded?.Invoke(null);
+
+                Task tUsers = new Task(LoadUsers);
+                tUsers.Start();
+                await tUsers;
+                OnUsersLoaded?.Invoke(null);
+            }
+            catch (Exception exp)
+            {
+
+            }
         }
         #endregion
 
         #region Methods private
+        private void Init()
+        {
+            OnChannelsLoaded += _slackMenu_OnChannelsLoaded;
+            OnInfoLoaded += _slackMenu_OnInfoLoaded;
+            OnUsersLoaded += _slackMenu_OnUsersLoaded;
+        }
         private void LoadChannels()
         {
-            TreeNode tn;
-            panelChannels.Height = 30;
-            _treeViewChannels.Nodes.Clear();
-            if (SlackAdapter.Channels != null)
-            { 
-                TreeNode root = _treeViewChannels.Nodes.Add("Channels");
-                foreach (Channel item in SlackAdapter.Channels.Where(c => !c.Is_Archived && c.Is_Member))
+            try
+            {
+                TreeNode tn;
+                if (_tmpTnChannels == null) { _tmpTnChannels = new TreeView(); }
+                _tmpTnChannels.Nodes.Clear();
+                if (SlackAdapter.Channels != null)
                 {
-                    tn = new TreeNode(item.Name);
-                    tn.Tag = item;
-                    root.Nodes.Add(tn);
-                    panelChannels.Height += 20;
+                    TreeNode root = _tmpTnChannels.Nodes.Add("Channels");
+                    foreach (Channel item in SlackAdapter.Channels.Where(c => !c.Is_Archived && c.Is_Member))
+                    {
+                        tn = new TreeNode(item.Name);
+                        tn.Tag = item;
+                        root.Nodes.Add(tn);
+                    }
                 }
-                root.ExpandAll();
+            }
+            catch (Exception exp)
+            {
+
             }
         }
         private void LoadUsers()
         {
-            TreeNode tn;
-            panelUsers.Height = 30;
-            _treeViewUsers.Nodes.Clear();
-            if (SlackAdapter.Users != null)
-            { 
-                TreeNode root = _treeViewUsers.Nodes.Add("Members");
-                foreach (Member item in SlackAdapter.Users)
+            try
+            {
+                Status connected;
+                TreeNode tn;
+                if (_tmpTnUsers == null) { _tmpTnUsers = new TreeView(); }
+                _tmpTnUsers.Nodes.Clear();
+                if (SlackAdapter.Users != null)
                 {
-                    tn = new TreeNode(item.Name);
-                    tn.Tag = item;
-                    root.Nodes.Add(tn);
-                    panelUsers.Height += 20;
+                    TreeNode root = _tmpTnUsers.Nodes.Add("Members");
+                    foreach (Member item in SlackAdapter.Users)
+                    {
+                        connected = UserControler.GetStatus(item);
+                        tn = new TreeNode(item.Name);
+                        tn.Tag = item;
+                        switch (connected.Presence)
+                        {
+                            case "active":
+                                tn.ImageKey = connected.Last_Activity == null ? "connected" : "unactive";
+                                break;
+                            case "away":
+                                tn.ImageKey = "disconnected";
+                                break;
+                            default:
+                                tn.ImageKey = "unknow";
+                                break;
+                        }
+                        tn.ImageIndex = imageListStatus.Images.IndexOfKey(tn.ImageKey);
+                        root.Nodes.Add(tn);
+                    }
+                    root.ExpandAll();
                 }
-                root.ExpandAll();
+            }
+            catch (Exception exp)
+            {
+
             }
         }
         private void LoadInfo()
         {
-            if (_slackAdapter.Team != null)
-            { 
-                labelTitle.Text = _slackAdapter.Team.Name;
-                pictureBoxIcon.Load(_slackAdapter.Team.Icon.Image_34);
-            }
-            else
+            try
             {
-                labelTitle.Text = "Slack";
-                pictureBoxIcon.Image = null;
+                if (_slackAdapter.Team != null)
+                {
+                    labelTitle.Text = _slackAdapter.Team.Name;
+                    pictureBoxIcon.Load(_slackAdapter.Team.Icon.Image_34);
+                }
+                else
+                {
+                    labelTitle.Text = "Slack";
+                    pictureBoxIcon.Image = null;
+                }
+            }
+            catch (Exception exp)
+            {
+
+            }
+        }
+        private void UpdateTreeNodeUsers()
+        {
+            Copy(_tmpTnUsers, _treeViewUsers);
+            _treeViewUsers.ExpandAll();
+            panelUsers.Height = 30 + _treeViewUsers.Nodes[0].Nodes.Count * 20;
+            this.Refresh();
+            this.Invalidate();
+        }
+        private void UpdateTreeNodeChannels()
+        {
+            Copy(_tmpTnChannels, _treeViewChannels);
+            _treeViewChannels.ExpandAll();
+            panelChannels.Height = 30 + _treeViewChannels.Nodes[0].Nodes.Count * 20;
+            this.Refresh();
+            this.Invalidate();
+        }
+        private void Copy(TreeView treeviewSrc, TreeView treeviewTarget)
+        {
+            TreeNode newTn;
+            if (treeviewTarget != null) { treeviewTarget.Nodes.Clear(); }
+            foreach (TreeNode tn in treeviewSrc.Nodes)
+            {
+                newTn = new TreeNode(tn.Text, tn.ImageIndex, tn.SelectedImageIndex);
+                CopyChilds(newTn, tn);
+                treeviewTarget.Nodes.Add(newTn);
+            }
+        }
+        private void CopyChilds(TreeNode parent, TreeNode willCopied)
+        {
+            TreeNode newTn;
+            foreach (TreeNode tn in willCopied.Nodes)
+            {
+                newTn = new TreeNode(tn.Text, tn.ImageIndex, tn.SelectedImageIndex);
+                parent.Nodes.Add(newTn);
             }
         }
         #endregion
@@ -114,6 +215,19 @@ namespace SlackClient
             ss.LoadData(_slackAdapter);
 
             ss.ShowDialog();
+        }
+        private void _slackMenu_OnUsersLoaded(object o)
+        {
+            UpdateTreeNodeUsers();
+        }
+        private void _slackMenu_OnInfoLoaded(object o)
+        {
+            this.Refresh();
+            this.Invalidate();
+        }
+        private void _slackMenu_OnChannelsLoaded(object o)
+        {
+            UpdateTreeNodeChannels();
         }
         #endregion
     }

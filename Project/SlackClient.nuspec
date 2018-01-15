@@ -2,15 +2,15 @@
 <package >
   <metadata>
     <id>Servodroid.SlackClient</id>
-    <version>1.0.0</version>
+    <version>1.0.2</version>
     <title>Servodroid.SlackClient</title>
     <authors>Thibault MONTAUFRAY</authors>
     <owners>Thibault MONTAUFRAY</owners>
     <licenseUrl>https://raw.githubusercontent.com/ThibaultMontaufray/Tools4Libraries/master/License</licenseUrl>
     <projectUrl>https://github.com/ThibaultMontaufray/SlackClient</projectUrl>
-    <iconUrl>https://raw.githubusercontent.com/ThibaultMontaufray/SlackClient/slack.png</iconUrl>
+    <iconUrl>https://raw.githubusercontent.com/ThibaultMontaufray/SlackClient/master/Project/slack.png</iconUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
-    <description>Slack client dll with rtm. Basics winform for previews inside.</description>
+    <description>Slack client communication with the api. You just need to generate your tokent to connect. Rtm inclusion (Real Time Communication). Small Winform based GUI integrated if needed.</description>
     <copyright>Copyright 2018</copyright>
     <tags>Servodroid slack api rtm</tags>
   </metadata>

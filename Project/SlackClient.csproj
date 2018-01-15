@@ -73,6 +73,7 @@
     <Compile Include="Controler\ConversationControler.cs" />
     <Compile Include="Controler\EmojiControler.cs" />
     <Compile Include="Controler\Ext.cs" />
+    <Compile Include="Model\Api\Status.cs" />
     <Compile Include="Model\Event\Event.cs" />
     <Compile Include="Controler\GroupControler.cs" />
     <Compile Include="Controler\ImControler.cs" />
@@ -196,6 +197,15 @@
     <EmbeddedResource Include="View\SlackSettings.resx">
       <DependentUpon>SlackSettings.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\grinning.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\innocent.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\slightly_smiling_face.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

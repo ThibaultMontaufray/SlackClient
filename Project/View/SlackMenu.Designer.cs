@@ -28,15 +28,17 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SlackMenu));
             this.panelHeader = new System.Windows.Forms.Panel();
+            this.buttonSettings = new System.Windows.Forms.Button();
             this.pictureBoxIcon = new System.Windows.Forms.PictureBox();
             this.labelTitle = new System.Windows.Forms.Label();
             this._treeViewChannels = new System.Windows.Forms.TreeView();
             this._treeViewUsers = new System.Windows.Forms.TreeView();
             this.panelChannels = new System.Windows.Forms.Panel();
             this.panelUsers = new System.Windows.Forms.Panel();
-            this.buttonSettings = new System.Windows.Forms.Button();
+            this.imageListStatus = new System.Windows.Forms.ImageList(this.components);
             this.panelHeader.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxIcon)).BeginInit();
             this.panelChannels.SuspendLayout();
@@ -56,6 +58,23 @@
             this.panelHeader.Name = "panelHeader";
             this.panelHeader.Size = new System.Drawing.Size(350, 50);
             this.panelHeader.TabIndex = 1;
+            // 
+            // buttonSettings
+            // 
+            this.buttonSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonSettings.BackColor = System.Drawing.Color.Transparent;
+            this.buttonSettings.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("buttonSettings.BackgroundImage")));
+            this.buttonSettings.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
+            this.buttonSettings.FlatAppearance.BorderSize = 0;
+            this.buttonSettings.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            this.buttonSettings.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            this.buttonSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonSettings.Location = new System.Drawing.Point(310, 8);
+            this.buttonSettings.Name = "buttonSettings";
+            this.buttonSettings.Size = new System.Drawing.Size(32, 32);
+            this.buttonSettings.TabIndex = 2;
+            this.buttonSettings.UseVisualStyleBackColor = false;
+            this.buttonSettings.Click += new System.EventHandler(this.buttonSettings_Click);
             // 
             // pictureBoxIcon
             // 
@@ -99,8 +118,11 @@
             this._treeViewUsers.Dock = System.Windows.Forms.DockStyle.Fill;
             this._treeViewUsers.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this._treeViewUsers.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this._treeViewUsers.ImageIndex = 0;
+            this._treeViewUsers.ImageList = this.imageListStatus;
             this._treeViewUsers.Location = new System.Drawing.Point(0, 0);
             this._treeViewUsers.Name = "_treeViewUsers";
+            this._treeViewUsers.SelectedImageIndex = 0;
             this._treeViewUsers.ShowLines = false;
             this._treeViewUsers.ShowPlusMinus = false;
             this._treeViewUsers.ShowRootLines = false;
@@ -126,22 +148,14 @@
             this.panelUsers.Size = new System.Drawing.Size(350, 393);
             this.panelUsers.TabIndex = 5;
             // 
-            // buttonSettings
+            // imageListStatus
             // 
-            this.buttonSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSettings.BackColor = System.Drawing.Color.Transparent;
-            this.buttonSettings.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("buttonSettings.BackgroundImage")));
-            this.buttonSettings.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
-            this.buttonSettings.FlatAppearance.BorderSize = 0;
-            this.buttonSettings.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
-            this.buttonSettings.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
-            this.buttonSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonSettings.Location = new System.Drawing.Point(310, 8);
-            this.buttonSettings.Name = "buttonSettings";
-            this.buttonSettings.Size = new System.Drawing.Size(32, 32);
-            this.buttonSettings.TabIndex = 2;
-            this.buttonSettings.UseVisualStyleBackColor = false;
-            this.buttonSettings.Click += new System.EventHandler(this.buttonSettings_Click);
+            this.imageListStatus.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListStatus.ImageStream")));
+            this.imageListStatus.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageListStatus.Images.SetKeyName(0, "unknow");
+            this.imageListStatus.Images.SetKeyName(1, "unactive");
+            this.imageListStatus.Images.SetKeyName(2, "connected");
+            this.imageListStatus.Images.SetKeyName(3, "disconnected");
             // 
             // SlackMenu
             // 
@@ -174,5 +188,6 @@
         private System.Windows.Forms.Label labelTitle;
         private System.Windows.Forms.PictureBox pictureBoxIcon;
         private System.Windows.Forms.Button buttonSettings;
+        private System.Windows.Forms.ImageList imageListStatus;
     }
 }

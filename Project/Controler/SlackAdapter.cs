@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -98,7 +99,7 @@ namespace SlackClient
             if (_currentChannel != null)
             {
                 SlackMessage lastMessage = _currentMessages.First();
-                ConversationControler.Send(_currentChannel.Id, lastMessage.CurrentMessage.Ts, message);
+                _slackRtm.SendMessage(_currentChannel, message, null);
             }
         }
         #endregion
@@ -109,11 +110,17 @@ namespace SlackClient
         #region Event
         private static void Instance_OnAck(object sender, SlackEventArgs e)
         {
-
+            using (StreamWriter sw = new StreamWriter("log.txt", true))
+            {
+                sw.WriteLine(string.Format("{0} Ack : {1}", DateTime.Now, e.Data.ToJson()));
+            }
         }
         private static void Instance_OnEvent1(object sender, SlackEventArgs e)
         {
-
+            using (StreamWriter sw = new StreamWriter("log.txt", true))
+            {
+                sw.WriteLine(string.Format("{0} Event : {1}", DateTime.Now, e.Data.ToJson()));
+            }
         }
         #endregion
     }
