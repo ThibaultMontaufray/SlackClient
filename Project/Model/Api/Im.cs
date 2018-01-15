@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SlackClient
 {
-    public class Im : Permission
+    public class Im : Channel
     {
         private string _id;
         private bool _isIm;

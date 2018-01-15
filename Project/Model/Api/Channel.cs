@@ -10,6 +10,7 @@ namespace SlackClient
     [JsonObject(MemberSerialization.OptIn)]
     public class Channel : Permission
     {
+        #region Attributes
         private string _id;
         private string _name;
         private bool _isChannel;
@@ -34,7 +35,9 @@ namespace SlackClient
         private Purpose _purpose;
         private List<string> _previousNames;
         private int _numMembers;
+        #endregion
 
+        #region Properties
         public bool Is_Pending_Shared
         {
             get { return _isPendingShared; }
@@ -155,12 +158,15 @@ namespace SlackClient
             get { return _id; }
             set { _id = value; }
         }
+        #endregion
 
+        #region Constructor
         public Channel()
         {
             _previousNames = new List<string>();
             _members = new List<string>();
             _scopes = new List<string>();
         }
+        #endregion
     }
 }

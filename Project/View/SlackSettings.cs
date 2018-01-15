@@ -45,17 +45,24 @@ namespace SlackClient
             DataGridViewRow row;
             _dataGridViewToken.Rows.Clear();
 
-            if (_slackAdapter != null && _slackAdapter.Tokens != null)
+            if (_slackAdapter != null && SlackAdapter.CurrentToken != null)
             {
-                foreach (var item in _slackAdapter.Tokens)
-                {
-                    _dataGridViewToken.Rows.Add();
 
-                    row = _dataGridViewToken.Rows[_dataGridViewToken.Rows.Count - 1];
-                    row.Cells[ColumnKey.Index].Value = item.Key;
-                    row.Cells[ColumnActive.Index].Value = item.IsUsed;
-                    row.Cells[ColumnDelete.Index].Value = Tools4Libraries.Resources.ResourceIconSet16Default.bin_empty;
-                }
+                _dataGridViewToken.Rows.Add();
+
+                row = _dataGridViewToken.Rows[_dataGridViewToken.Rows.Count - 1];
+                row.Cells[ColumnKey.Index].Value = SlackAdapter.CurrentToken.Key;
+                row.Cells[ColumnActive.Index].Value = SlackAdapter.CurrentToken.IsUsed;
+                row.Cells[ColumnDelete.Index].Value = Tools4Libraries.Resources.ResourceIconSet16Default.bin_empty;
+                //foreach (var item in _slackAdapter.Tokens)
+                //{
+                //    _dataGridViewToken.Rows.Add();
+
+                //    row = _dataGridViewToken.Rows[_dataGridViewToken.Rows.Count - 1];
+                //    row.Cells[ColumnKey.Index].Value = item.Key;
+                //    row.Cells[ColumnActive.Index].Value = item.IsUsed;
+                //    row.Cells[ColumnDelete.Index].Value = Tools4Libraries.Resources.ResourceIconSet16Default.bin_empty;
+                //}
             }
             _dataGridViewToken.Height =( _dataGridViewToken.Rows.Count > 0 ? _dataGridViewToken.Rows.Count * 24 : 24) -1;
             this.Height = 135 + (_dataGridViewToken.Rows.Count > 0 ? ((_dataGridViewToken.Rows.Count - 1) * 24) : 0);

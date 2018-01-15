@@ -9,12 +9,14 @@ namespace SlackClient
     public class SlackAdapter
     {
         #region Attributes
+        public static Token CurrentToken;
+
         private List<SlackMessage> _currentMessages;
         private List<Channel> _channels;
         private List<Member> _users;
-        private List<Token> _tokens;
         private Channel _currentChannel;
         private Team _team;
+        private SlackRtm _slackRtm;
         #endregion
 
         #region Properties
@@ -38,23 +40,21 @@ namespace SlackClient
             get { return _currentChannel; }
             set { _currentChannel = value; }
         }
-        public List<Token> Tokens
-        {
-            get { return _tokens; }
-            set { _tokens = value; }
-        }
         public List<SlackMessage> CurrentMessages
         {
             get { return _currentMessages; }
             set { _currentMessages = value; }
+        }
+        public SlackRtm SlackRtm
+        {
+            get { return _slackRtm; }
+            set { _slackRtm = value; }
         }
         #endregion
 
         #region Constructor
         public SlackAdapter()
         {
-            _channels = new List<Channel>();
-            _users = new List<Member>();
             Init();
         }
         #endregion
@@ -62,14 +62,36 @@ namespace SlackClient
         #region Methods public
         public void Init()
         {
+            _channels = new List<Channel>();
+            _users = new List<Member>();
+            _currentMessages = new List<SlackMessage>();
+
+            _slackRtm = new SlackRtm();
+            _slackRtm.OnEvent += Instance_OnEvent1;
+            _slackRtm.OnAck += Instance_OnAck;
+
+            LoadData();
+        }
+        public void LoadData()
+        {
             _channels = ChannelsControler.List();
             _users = UserControler.List();
             _team = TeamControler.Info();
-            _currentMessages = new List<SlackMessage>();
 
-            _tokens = new List<Token>();
-            _tokens.Add(new Token() { IsUsed = true, Key = "AZERTY" });
-            _tokens.Add(new Token() { IsUsed = false, Key = "testtesttest" });
+            InitRtm();
+        }
+        public void InitRtm()
+        {
+            if (_slackRtm != null)
+            {
+                _slackRtm.OnEvent -= Instance_OnEvent1;
+                _slackRtm.OnAck -= Instance_OnAck;
+            }
+
+            _slackRtm = new SlackRtm(SlackAdapter.CurrentToken.Key);
+            _slackRtm.OnEvent += Instance_OnEvent1;
+            _slackRtm.OnAck += Instance_OnAck;
+            _slackRtm.Connect();
         }
         public void SendMessage(string message)
         {
@@ -82,6 +104,17 @@ namespace SlackClient
         #endregion
 
         #region Methods private
+        #endregion
+
+        #region Event
+        private static void Instance_OnAck(object sender, SlackEventArgs e)
+        {
+
+        }
+        private static void Instance_OnEvent1(object sender, SlackEventArgs e)
+        {
+
+        }
         #endregion
     }
 }

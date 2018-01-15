@@ -7,10 +7,11 @@ using System.Threading.Tasks;
 
 namespace SlackClient
 {
-    public class Message
+    public class Message : Event
     {
+        #region Attributes
         private string _type;
-        private double _ts;
+        private string _ts;
         private string _user;
         private string _text;
         private bool _isStarred;
@@ -19,7 +20,12 @@ namespace SlackClient
         private string _userName;
         private string _botId;
         private string _subType;
+        private bool _hidden;
+        private string _channel;
+        private int _id;
+        #endregion
 
+        #region Properties
         public List<Attachment> Attachements
         {
             get { return _attachments; }
@@ -45,7 +51,6 @@ namespace SlackClient
             get { return _reactions; }
             set { _reactions = value; }
         }
-
         public bool IsStarred
         {
             get { return _isStarred; }
@@ -61,20 +66,61 @@ namespace SlackClient
             get { return _user; }
             set { _user = value; }
         }
-        public double Ts
+        public string Ts
         {
             get { return _ts; }
             set { _ts = value; }
         }
-        public string Type
+        public override string Type
         {
-            get { return _type; }
-            set { _type = value; }
+            get { return "message"; }
         }
+        public bool Hidden
+        {
+            get { return _hidden; }
+            set { _hidden = value; }
+        }
+        public int Id
+        {
+            get { return _id; }
+            set { _id = value; }
+        }
+        public string Channel
+        {
+            get { return _channel; }
+            set { _channel = value; }
+        }
+        #endregion
 
+        #region Constructor
         public Message()
         {
-            _reactions = new List<Reaction>();
+
         }
+        internal Message(Newtonsoft.Json.Linq.JObject data)
+        {
+            this.Channel = data.Value<string>("channel");
+            this.User = data.Value<string>("user");
+            this.Text = data.Value<string>("text");
+            this.Ts = data.Value<string>("ts");
+            this.SubType = data.Value<string>("subtype");
+            this.Hidden = data.Value<bool>("hidden");
+            this.Id = -1;
+        }
+        internal Message(string channel, string text, int id)
+        {
+            // TODO: Complete member initialization
+            this.Channel = channel;
+            this.Text = text;
+            this.Id = id;
+        }
+        #endregion
+
+        #region Methods public
+        public override string ToString()
+        {
+            return string.Format("<#{0}> <@{1}>: {2}", Channel, User, Text);
+        }
+        #endregion
     }
 }

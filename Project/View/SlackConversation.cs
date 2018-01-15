@@ -53,6 +53,8 @@ namespace SlackClient
         #region Methods private
         private void LoadData()
         {
+            this.Width = 10;
+            this.Height = 10;
             _slackAdapter.CurrentMessages.Clear();
             SlackMessage slackMessage;
             if (_currentConversation != null)

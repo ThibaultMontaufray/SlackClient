@@ -25,13 +25,13 @@ namespace SlackClient
                     conversation = Accessor.Deserialize<Conversation>(answer);
                 }
             }
-            catch
+            catch (Exception exp)
             {
             }
 
             return conversation;
         }
-        public static void Send(string channel, double ts, string message)
+        public static void Send(string channel, string ts, string message)
         {
             // token    Authentication token bearing required scopes.
             // channel  Conversation ID to fetch thread from.

@@ -15,8 +15,8 @@ namespace SlackClient
     public class Accessor
     {
         #region Attributes
-        public static readonly string TOKEN = ConfigurationManager.AppSettings["TOKEN"];
-        public static readonly string TOKENHEADER = ConfigurationManager.AppSettings["TOKENHEADER"];
+        //public static readonly string TOKEN = ConfigurationManager.AppSettings["TOKEN"];
+        public static readonly string TOKENHEADER = "token";
         #endregion
 
         #region Constructor
@@ -31,7 +31,7 @@ namespace SlackClient
         {
             WebRequest webRequest = WebRequest.Create(url);
             webRequest.Method = "GET";
-            webRequest.Headers.Add(TOKENHEADER, TOKEN);
+            webRequest.Headers.Add(TOKENHEADER, SlackAdapter.CurrentToken.Key);
             if (headers != null) { foreach (var item in headers) { webRequest.Headers.Add(item.Key, item.Value); } }
             WebResponse response = webRequest.GetResponse();
 
@@ -50,7 +50,7 @@ namespace SlackClient
                 webRequest.Method = "POST";
                 webRequest.ContentType = "application/json";
                 webRequest.ContentLength = dataStream.Length;
-                webRequest.Headers.Add(TOKENHEADER, TOKEN);
+                webRequest.Headers.Add(TOKENHEADER, SlackAdapter.CurrentToken.Key);
                 if (headers != null) { foreach (var item in headers) { webRequest.Headers.Add(item.Key, item.Value); } }
 
                 Stream newStream = webRequest.GetRequestStream();
@@ -87,7 +87,7 @@ namespace SlackClient
                         outgoingQueryString.Add(item.Key, item.Value);
                     }
                 }
-                outgoingQueryString.Add(TOKENHEADER, TOKEN);
+                outgoingQueryString.Add(TOKENHEADER, SlackAdapter.CurrentToken.Key);
                 string postdata = outgoingQueryString.ToString();
 
                 url += "?" + postdata;

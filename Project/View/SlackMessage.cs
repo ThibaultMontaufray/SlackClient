@@ -59,7 +59,7 @@ namespace SlackClient
             if (_currentMessage != null)
             {
                 System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
-                dtDateTime = dtDateTime.AddSeconds(_currentMessage.Ts).ToLocalTime();
+                dtDateTime = dtDateTime.AddSeconds(double.Parse(_currentMessage.Ts.Replace('.', ','))).ToLocalTime();
                 labelDate.Text = dtDateTime.ToString("hh:mm tt");
                 _textBox.Text = CleanText(_currentMessage.Text);
             }

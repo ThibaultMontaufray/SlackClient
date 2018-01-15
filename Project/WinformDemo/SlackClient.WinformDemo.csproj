@@ -84,11 +84,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\SlackClient.csproj">
-      <Project>{B6476DDC-B61B-43A1-AEDC-F08E4FC809DB}</Project>
+      <Project>{b6476ddc-b61b-43a1-aedc-f08e4fc809db}</Project>
       <Name>SlackClient</Name>
     </ProjectReference>
   </ItemGroup>

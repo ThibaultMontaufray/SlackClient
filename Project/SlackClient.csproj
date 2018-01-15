@@ -11,6 +11,7 @@
     <AssemblyName>SlackClient</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -37,6 +38,7 @@
     <Reference Include="System" />
     <Reference Include="System.configuration">
       <Private>True</Private>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -53,6 +55,14 @@
       <HintPath>packages\Tools4Libraries.1.0.18\lib\4.5.1\Tools4Libraries.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Websockets.Net, Version=1.0.0.8, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Websockets.Pcl.1.1.9\lib\net45\Websockets.Net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="WebSockets.PCL, Version=1.0.0.8, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Websockets.Pcl.1.1.9\lib\net45\WebSockets.PCL.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controler\Accessor.cs" />
@@ -62,52 +72,61 @@
     <Compile Include="Controler\ChannelsControler.cs" />
     <Compile Include="Controler\ConversationControler.cs" />
     <Compile Include="Controler\EmojiControler.cs" />
+    <Compile Include="Controler\Ext.cs" />
+    <Compile Include="Model\Event\Event.cs" />
     <Compile Include="Controler\GroupControler.cs" />
     <Compile Include="Controler\ImControler.cs" />
     <Compile Include="Controler\RtmControler.cs" />
     <Compile Include="Controler\SlackAdapter.cs" />
+    <Compile Include="Controler\SlackClient.cs" />
+    <Compile Include="Controler\SlackJsonConverter.cs" />
+    <Compile Include="Controler\SlackRtm.cs" />
     <Compile Include="Controler\TeamControler.cs" />
     <Compile Include="Controler\Token.cs" />
     <Compile Include="Controler\UserControler.cs" />
-    <Compile Include="Model\AppHome.cs" />
-    <Compile Include="Model\Attachment.cs" />
-    <Compile Include="Model\Authorisation.cs" />
-    <Compile Include="Model\Channel.cs" />
-    <Compile Include="Model\Channels.cs" />
-    <Compile Include="Model\Comment.cs" />
-    <Compile Include="Model\Conversation.cs" />
-    <Compile Include="Model\DoNotDisturb.cs" />
-    <Compile Include="Model\Emoji.cs" />
-    <Compile Include="Model\Emojis.cs" />
-    <Compile Include="Model\File.cs" />
-    <Compile Include="Model\FileInfo.cs" />
-    <Compile Include="Model\Group.cs" />
-    <Compile Include="Model\GroupInfo.cs" />
-    <Compile Include="Model\Groups.cs" />
-    <Compile Include="Model\History.cs" />
-    <Compile Include="Model\Icon.cs" />
-    <Compile Include="Model\Im.cs" />
-    <Compile Include="Model\Ims.cs" />
-    <Compile Include="Model\Info.cs" />
-    <Compile Include="Model\Latest.cs" />
-    <Compile Include="Model\Member.cs" />
-    <Compile Include="Model\Message.cs" />
-    <Compile Include="Model\Mpim.cs" />
-    <Compile Include="Model\Paging.cs" />
-    <Compile Include="Model\Permission.cs" />
-    <Compile Include="Model\PermissionInfo.cs" />
-    <Compile Include="Model\Profile.cs" />
-    <Compile Include="Model\Purpose.cs" />
-    <Compile Include="Model\Reaction.cs" />
-    <Compile Include="Model\Response.cs" />
-    <Compile Include="Model\ResponseMetadata.cs" />
-    <Compile Include="Model\Resources.cs" />
-    <Compile Include="Model\Rtm.cs" />
-    <Compile Include="Model\Self.cs" />
-    <Compile Include="Model\Team.cs" />
-    <Compile Include="Model\TeamInfo.cs" />
-    <Compile Include="Model\Topic.cs" />
-    <Compile Include="Model\Users.cs" />
+    <Compile Include="Model\Event\Ack.cs" />
+    <Compile Include="Model\Api\AppHome.cs" />
+    <Compile Include="Model\Api\Attachment.cs" />
+    <Compile Include="Model\Api\Authorisation.cs" />
+    <Compile Include="Model\Api\Channel.cs" />
+    <Compile Include="Model\Api\Channels.cs" />
+    <Compile Include="Model\Api\Comment.cs" />
+    <Compile Include="Model\Api\Conversation.cs" />
+    <Compile Include="Model\Api\DoNotDisturb.cs" />
+    <Compile Include="Model\Api\Emoji.cs" />
+    <Compile Include="Model\Api\Emojis.cs" />
+    <Compile Include="Model\Api\File.cs" />
+    <Compile Include="Model\Api\FileInfo.cs" />
+    <Compile Include="Model\Api\Group.cs" />
+    <Compile Include="Model\Api\GroupInfo.cs" />
+    <Compile Include="Model\Api\Groups.cs" />
+    <Compile Include="Model\Api\History.cs" />
+    <Compile Include="Model\Api\Icon.cs" />
+    <Compile Include="Model\Api\Im.cs" />
+    <Compile Include="Model\Api\Ims.cs" />
+    <Compile Include="Model\Api\Info.cs" />
+    <Compile Include="Model\Api\Latest.cs" />
+    <Compile Include="Model\Api\Member.cs" />
+    <Compile Include="Model\Api\Message.cs" />
+    <Compile Include="Model\Api\Mpim.cs" />
+    <Compile Include="Model\Api\Paging.cs" />
+    <Compile Include="Model\Api\Permission.cs" />
+    <Compile Include="Model\Api\PermissionInfo.cs" />
+    <Compile Include="Model\Api\Profile.cs" />
+    <Compile Include="Model\Api\Purpose.cs" />
+    <Compile Include="Model\Api\Reaction.cs" />
+    <Compile Include="Model\Api\Response.cs" />
+    <Compile Include="Model\Api\ResponseMetadata.cs" />
+    <Compile Include="Model\Api\Resources.cs" />
+    <Compile Include="Model\Api\Rtm.cs" />
+    <Compile Include="Model\Api\Self.cs" />
+    <Compile Include="Model\Api\Team.cs" />
+    <Compile Include="Model\Api\TeamInfo.cs" />
+    <Compile Include="Model\Api\Topic.cs" />
+    <Compile Include="Model\Api\Users.cs" />
+    <Compile Include="Model\Event\Hello.cs" />
+    <Compile Include="Model\Event\SlackEventArgs.cs" />
+    <Compile Include="Model\Event\UnknownEvent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -152,7 +171,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

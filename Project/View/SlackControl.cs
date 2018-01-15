@@ -33,6 +33,10 @@ namespace SlackClient
         #endregion
 
         #region Methods public
+        public void LoadData()
+        {
+            _slackMenu.LoadData(_slackAdapter);
+        }
         #endregion
 
         #region Methods private
