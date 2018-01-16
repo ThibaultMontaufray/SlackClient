@@ -68,8 +68,7 @@
             // 
             // _textBox
             // 
-            this._textBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this._textBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this._textBox.BackColor = System.Drawing.Color.WhiteSmoke;
             this._textBox.BorderStyle = System.Windows.Forms.BorderStyle.None;

@@ -7,10 +7,13 @@ using System.Threading.Tasks;
 
 namespace SlackClient
 {
+    public delegate void SlackAdapterEventHandler(object o);
     public class SlackAdapter
     {
         #region Attributes
+        public const string LOGFILE = "log.txt";
         public static Token CurrentToken;
+        public event SlackAdapterEventHandler OnMessagesUpdated;
 
         private List<SlackMessage> _currentMessages;
         private List<Channel> _channels;
@@ -18,6 +21,7 @@ namespace SlackClient
         private Channel _currentChannel;
         private Team _team;
         private SlackRtm _slackRtm;
+        private Member _currentUser;
         #endregion
 
         #region Properties
@@ -51,6 +55,11 @@ namespace SlackClient
             get { return _slackRtm; }
             set { _slackRtm = value; }
         }
+        public Member CurrentUser
+        {
+            get { return _currentUser; }
+            set { _currentUser = value; }
+        }
         #endregion
 
         #region Constructor
@@ -61,18 +70,6 @@ namespace SlackClient
         #endregion
 
         #region Methods public
-        public void Init()
-        {
-            _channels = new List<Channel>();
-            _users = new List<Member>();
-            _currentMessages = new List<SlackMessage>();
-
-            _slackRtm = new SlackRtm();
-            _slackRtm.OnEvent += Instance_OnEvent1;
-            _slackRtm.OnAck += Instance_OnAck;
-
-            LoadData();
-        }
         public void LoadData()
         {
             _channels = ChannelsControler.List();
@@ -105,22 +102,83 @@ namespace SlackClient
         #endregion
 
         #region Methods private
+        private void Init()
+        {
+            _currentUser = UserControler.GetProfile();
+            _channels = new List<Channel>();
+            _users = new List<Member>();
+            _currentMessages = new List<SlackMessage>();
+
+            _slackRtm = new SlackRtm();
+            _slackRtm.OnEvent += Instance_OnEvent1;
+            _slackRtm.OnAck += Instance_OnAck;
+
+            LoadData();
+        }
+        private void ProcessEvent(SlackEventArgs eventArg)
+        {
+            ProcessEventLog(eventArg);
+            switch (eventArg.Data.Type)
+            {
+                case "message":
+                    ProcessEventMessage(Accessor.Deserialize<Message>(eventArg.Data.ToJson()));
+                    break;
+                case "hello":
+                    break;
+                case "reconnect_url":
+                    break;
+                case "channel_marked":
+                    break;
+                case "error":
+                    break;
+                case "user_typing":
+                    break;
+                default:
+                    break;
+            }
+        }
+        private void ProcessEventLog(SlackEventArgs eventArg)
+        {
+            if (System.IO.File.Exists(LOGFILE))
+            {
+                System.IO.FileInfo fi = new System.IO.FileInfo(LOGFILE);
+                if (fi.Length > 100000)
+                {
+                    if (System.IO.File.Exists(LOGFILE + ".backup"))
+                    {
+                        System.IO.File.Delete(LOGFILE + ".backup");
+                    }
+                    System.IO.File.Move(LOGFILE, LOGFILE + ".backup");
+                }
+            }
+            using (StreamWriter sw = new StreamWriter(LOGFILE, true))
+            {
+                sw.WriteLine(string.Format("{0} Event : {1} [{2}]", DateTime.Now, eventArg.Data.ToJson()), eventArg.Data.ToString());
+            }
+        }
+        private void ProcessEventMessage(Message msg)
+        {
+            if (_currentChannel.Id == msg.Channel)
+            { 
+                SlackMessage smsg = new SlackMessage();
+                smsg.LoadMessage(this, msg);
+                _currentMessages.Add(smsg);
+                OnMessagesUpdated?.Invoke(msg);
+            }
+        }
         #endregion
 
         #region Event
-        private static void Instance_OnAck(object sender, SlackEventArgs e)
+        private void Instance_OnAck(object sender, SlackEventArgs e)
         {
             using (StreamWriter sw = new StreamWriter("log.txt", true))
             {
                 sw.WriteLine(string.Format("{0} Ack : {1}", DateTime.Now, e.Data.ToJson()));
             }
         }
-        private static void Instance_OnEvent1(object sender, SlackEventArgs e)
+        private void Instance_OnEvent1(object sender, SlackEventArgs e)
         {
-            using (StreamWriter sw = new StreamWriter("log.txt", true))
-            {
-                sw.WriteLine(string.Format("{0} Event : {1}", DateTime.Now, e.Data.ToJson()));
-            }
+            ProcessEvent(e);
         }
         #endregion
     }

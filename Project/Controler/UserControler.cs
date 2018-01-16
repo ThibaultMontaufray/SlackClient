@@ -50,5 +50,24 @@ namespace SlackClient
 
             return status;
         }
+        public static Member GetProfile()
+        {
+            Member member = null;
+
+            try
+            {
+                string answer = Accessor.JsonPostFormData(URL + ".profile.get");
+                Response response = Accessor.Deserialize<Response>(answer);
+                if (response.Ok)
+                {
+                    member = Accessor.Deserialize<Member>(answer);
+                }
+            }
+            catch
+            {
+            }
+
+            return member;
+        }
     }
 }

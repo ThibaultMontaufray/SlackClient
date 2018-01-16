@@ -47,6 +47,7 @@ namespace SlackClient
             try
             {
                 _slackAdapter = slackAdapter;
+                _slackAdapter.OnMessagesUpdated += _slackAdapter_OnMessagesUpdated;
 
                 Task tInfo = new Task(LoadInfo);
                 tInfo.Start();
@@ -153,10 +154,28 @@ namespace SlackClient
                     labelTitle.Text = "Slack";
                     pictureBoxIcon.Image = null;
                 }
+                labelCurrentUser.Text = _slackAdapter.CurrentUser.Profile.Real_Name;
+                SetStatus();
             }
             catch (Exception exp)
             {
 
+            }
+        }
+        private void SetStatus()
+        {
+            Status status = UserControler.GetStatus(_slackAdapter.CurrentUser);
+            switch (status.Presence)
+            {
+                case "active":
+                    pictureBoxStatus.Image = status.Last_Activity == null ? imageListStatus.Images[imageListStatus.Images.IndexOfKey("connected")] : imageListStatus.Images[imageListStatus.Images.IndexOfKey("disconnected")];
+                    break;
+                case "away":
+                    pictureBoxStatus.Image = imageListStatus.Images[imageListStatus.Images.IndexOfKey("disconnected")];
+                    break;
+                default:
+                    pictureBoxStatus.Image = imageListStatus.Images[imageListStatus.Images.IndexOfKey("unknow")];
+                    break;
             }
         }
         private void UpdateTreeNodeUsers()
@@ -182,6 +201,7 @@ namespace SlackClient
             foreach (TreeNode tn in treeviewSrc.Nodes)
             {
                 newTn = new TreeNode(tn.Text, tn.ImageIndex, tn.SelectedImageIndex);
+                newTn.Tag = tn.Tag;
                 CopyChilds(newTn, tn);
                 treeviewTarget.Nodes.Add(newTn);
             }
@@ -192,7 +212,22 @@ namespace SlackClient
             foreach (TreeNode tn in willCopied.Nodes)
             {
                 newTn = new TreeNode(tn.Text, tn.ImageIndex, tn.SelectedImageIndex);
+                newTn.Tag = tn.Tag;
                 parent.Nodes.Add(newTn);
+            }
+        }
+        private void ParseMessage(Message msg)
+        {
+            foreach (TreeNode node in _treeViewChannels.Nodes)
+            {
+                if (((Channel)node.Tag).Id.Equals(msg.Channel))
+                {
+                    node.NodeFont = new Font(_treeViewChannels.Font, FontStyle.Bold);
+                    if (msg.Text.Contains(_slackAdapter.CurrentUser.Name))
+                    {
+                        node.ForeColor = Color.Red;
+                    }
+                }
             }
         }
         #endregion
@@ -228,6 +263,10 @@ namespace SlackClient
         private void _slackMenu_OnChannelsLoaded(object o)
         {
             UpdateTreeNodeChannels();
+        }
+        private void _slackAdapter_OnMessagesUpdated(object o)
+        {
+            ParseMessage((Message)o);
         }
         #endregion
     }

@@ -47,6 +47,7 @@ namespace SlackClient
             _slackMenu.OnChannelChanged += _slackMenu_OnChannelChanged;
             _slackMenu.OnUserChanged += _slackMenu_OnUserChanged;
             _slackInput.OnMessageSendingRequest += _slackInput_OnMessageSendingRequest;
+            _slackInput.SlackAdapter = _slackAdapter;
             
             if (_slackAdapter.Channels.Count > 0)
             {
@@ -56,8 +57,12 @@ namespace SlackClient
         }
         private void RefreshConversation(Channel channel)
         {
-            _slackConversation.LoadConversation(_slackAdapter, channel.Id);
-            _slackAdapter.CurrentChannel = channel;
+            if (channel != null)
+            { 
+                _slackConversation.LoadConversation(_slackAdapter, channel.Id);
+                _slackAdapter.CurrentChannel = channel;
+                _slackHeader.LoadData(_slackAdapter);
+            }
         }
         #endregion
 

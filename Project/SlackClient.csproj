@@ -146,6 +146,12 @@
     <Compile Include="View\SlackConversation.Designer.cs">
       <DependentUpon>SlackConversation.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\SlackHeader.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="View\SlackHeader.Designer.cs">
+      <DependentUpon>SlackHeader.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\SlackInput.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -185,6 +191,9 @@
     <EmbeddedResource Include="View\SlackConversation.resx">
       <DependentUpon>SlackConversation.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="View\SlackHeader.resx">
+      <DependentUpon>SlackHeader.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\SlackInput.resx">
       <DependentUpon>SlackInput.cs</DependentUpon>
     </EmbeddedResource>
@@ -206,6 +215,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\slightly_smiling_face.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\skull.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\skull.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\wink.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

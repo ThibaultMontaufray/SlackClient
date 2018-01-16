@@ -15,9 +15,13 @@ namespace SlackClient
     public partial class SlackMessage : UserControl
     {
         #region Attributes
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private extern static int GetWindowLong(IntPtr hWnd, int index);
+
         private Message _currentMessage;
         private Member _currentMember;
         private SlackAdapter _slackAdapter;
+        private readonly string[] SMILEY = new string[] { "wink", "skull", "grinning", "innocent", "slightly_smiling_face" };
         #endregion
 
         #region Properties
@@ -42,6 +46,7 @@ namespace SlackClient
         public SlackMessage()
         {
             InitializeComponent();
+            Init();
         }
         #endregion
 
@@ -61,39 +66,57 @@ namespace SlackClient
                 System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
                 dtDateTime = dtDateTime.AddSeconds(double.Parse(_currentMessage.Ts.Replace('.', ','))).ToLocalTime();
                 labelDate.Text = dtDateTime.ToString("hh:mm tt");
-                _textBox.Text = CleanText(_currentMessage.Text);
+                _textBox.Text = _currentMessage.Text;
+                CleanTextBox();
             }
             AddSmileys();
         }
         #endregion
 
         #region Methods private
-        private string CleanText(string text)
+        private void Init()
         {
-            if (!string.IsNullOrEmpty(text) && Regex.IsMatch(text, "<(.*?)>"))
+            this.Resize += SlackMessage_Resize;
+        }
+        private void CleanTextBox()
+        {
+            if (!string.IsNullOrEmpty(_textBox.Text) && Regex.IsMatch(_textBox.Text, "<(.*?)>"))
             {
-                foreach (var item in Regex.Matches(text, "<http(.*?)>"))
+                foreach (var item in Regex.Matches(_textBox.Text, "<http(.*?)>"))
                 {
-                    text = text.Replace(item.ToString(), item.ToString().Substring(1, item.ToString().Length - 2));
+                    _textBox.Text = _textBox.Text.Replace(item.ToString(), item.ToString().Substring(1, item.ToString().Length - 2));
                 }
-                foreach (var item in Regex.Matches(text, "<(.*?)>"))
+                foreach (var item in Regex.Matches(_textBox.Text, "<(.*?)>"))
                 {
                     foreach (var user in _slackAdapter.Users)
                     {
-                        text = text.Replace(string.Format("<@{0}>", user.Id), string.Format("@{0}", user.Name));
+                        if (_textBox.Text.Contains(user.Id))
+                        {
+                            _textBox.Text = _textBox.Text.Replace(string.Format("<@{0}>", user.Id), string.Format("@{0}", user.Name));
+
+                            //_textBox.Select(0, _textBox.Text.Length);
+                            //_textBox.SelectionBackColor = System.Drawing.Color.Yellow;
+
+                            //Select the line from it's number
+                            int startIndex = _textBox.Find(string.Format("@{0}", user.Name));
+                            _textBox.Select(startIndex, string.Format("@{0}", user.Name).Length - 1);
+
+                            //Set the selected text fore and background color
+                            _textBox.SelectionBackColor = System.Drawing.Color.FromArgb(100, 255, 200, 0);
+                        }
                     }
                 }
             }
-            text = text.Replace("<!channel>", "@Channel");
-            return text;
+            _textBox.Text = _textBox.Text.Replace("<!channel>", "@Channel");
         }
         private void AddSmileys()
         {
             try
             {
-                ProcessSmiley("grinning");
-                ProcessSmiley("innocent");
-                ProcessSmiley("slightly_smiling_face");
+                foreach (var item in SMILEY)
+                {
+                    ProcessSmiley(item);
+                }
             }
             catch (Exception exp)
             {
@@ -113,13 +136,28 @@ namespace SlackClient
                 Rectangle rect = new Rectangle(Point.Empty, img.Size);
                 using (Graphics G = Graphics.FromImage(bmp2))
                 {
-                    G.Clear(Color.White);
+                    G.Clear(this.BackColor);
                     G.DrawImageUnscaledAndClipped(img, rect);
                 }
 
                 Clipboard.SetImage(bmp2);
                 _textBox.Paste();
             }
+        }
+        private void ResizeComponent()
+        {
+            Size lengthText = TextRenderer.MeasureText(_textBox.Text, _textBox.Font);
+            int boxWidth = this.Width;
+            _textBox.Height = (lengthText.Width * 18) / (boxWidth / 3);
+            if (_textBox.Height < 18) { _textBox.Height = 18; }
+            this.Height = _textBox.Height + 33;
+        }
+        #endregion
+
+        #region Event
+        private void SlackMessage_Resize(object sender, EventArgs e)
+        {
+            ResizeComponent();
         }
         #endregion
     }

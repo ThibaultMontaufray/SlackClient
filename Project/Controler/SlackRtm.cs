@@ -138,7 +138,7 @@ namespace SlackClient
         }
         public void SendMessage(Channel chan, string text, params object[] args)
         {
-            text = String.Format(text, args);
+            text = String.Format(text, new object());
             //if (!chan.IsMember)
             //    throw new NotInChannelException();
             var message = new Message(chan.Id, text, sendId++);

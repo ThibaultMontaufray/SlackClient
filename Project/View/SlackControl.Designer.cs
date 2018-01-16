@@ -28,31 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this._slackMenu = new SlackClient.SlackMenu();
-            this._slackInput = new SlackClient.View.SlackInput();
             this._slackConversation = new SlackClient.SlackConversation();
+            this._slackHeader = new SlackClient.SlackHeader();
+            this._slackInput = new SlackClient.SlackInput();
+            this._slackMenu = new SlackClient.SlackMenu();
             this.SuspendLayout();
-            // 
-            // _slackMenu
-            // 
-            this._slackMenu.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
-            this._slackMenu.Dock = System.Windows.Forms.DockStyle.Left;
-            this._slackMenu.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this._slackMenu.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this._slackMenu.Location = new System.Drawing.Point(0, 0);
-            this._slackMenu.Name = "_slackMenu";
-            this._slackMenu.Size = new System.Drawing.Size(300, 560);
-            this._slackMenu.SlackAdapter = null;
-            this._slackMenu.TabIndex = 0;
-            // 
-            // slackInput1
-            // 
-            this._slackInput.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this._slackInput.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this._slackInput.Location = new System.Drawing.Point(300, 518);
-            this._slackInput.Name = "slackInput1";
-            this._slackInput.Size = new System.Drawing.Size(685, 42);
-            this._slackInput.TabIndex = 2;
             // 
             // _slackConversation
             // 
@@ -67,13 +47,46 @@
             this._slackConversation.Dock = System.Windows.Forms.DockStyle.Fill;
             this._slackConversation.EnableAutoScrollHorizontal = true;
             this._slackConversation.EnableAutoScrollVertical = true;
-            this._slackConversation.Location = new System.Drawing.Point(300, 0);
+            this._slackConversation.Location = new System.Drawing.Point(300, 40);
             this._slackConversation.Name = "_slackConversation";
-            this._slackConversation.Size = new System.Drawing.Size(685, 518);
+            this._slackConversation.Size = new System.Drawing.Size(685, 478);
             this._slackConversation.SlackAdapter = null;
-            this._slackConversation.TabIndex = 3;
+            this._slackConversation.TabIndex = 5;
             this._slackConversation.VisibleAutoScrollHorizontal = true;
             this._slackConversation.VisibleAutoScrollVertical = true;
+            // 
+            // _slackHeader
+            // 
+            this._slackHeader.BackColor = System.Drawing.Color.WhiteSmoke;
+            this._slackHeader.Dock = System.Windows.Forms.DockStyle.Top;
+            this._slackHeader.ForeColor = System.Drawing.Color.Black;
+            this._slackHeader.Location = new System.Drawing.Point(300, 0);
+            this._slackHeader.Name = "_slackHeader";
+            this._slackHeader.Size = new System.Drawing.Size(685, 40);
+            this._slackHeader.TabIndex = 4;
+            // 
+            // _slackInput
+            // 
+            this._slackInput.BackColor = System.Drawing.Color.WhiteSmoke;
+            this._slackInput.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this._slackInput.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this._slackInput.Location = new System.Drawing.Point(300, 518);
+            this._slackInput.Name = "_slackInput";
+            this._slackInput.Size = new System.Drawing.Size(685, 42);
+            this._slackInput.SlackAdapter = null;
+            this._slackInput.TabIndex = 2;
+            // 
+            // _slackMenu
+            // 
+            this._slackMenu.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
+            this._slackMenu.Dock = System.Windows.Forms.DockStyle.Left;
+            this._slackMenu.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this._slackMenu.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this._slackMenu.Location = new System.Drawing.Point(0, 0);
+            this._slackMenu.Name = "_slackMenu";
+            this._slackMenu.Size = new System.Drawing.Size(300, 560);
+            this._slackMenu.SlackAdapter = null;
+            this._slackMenu.TabIndex = 0;
             // 
             // SlackControl
             // 
@@ -81,6 +94,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(28)))), ((int)(((byte)(28)))), ((int)(((byte)(28)))));
             this.Controls.Add(this._slackConversation);
+            this.Controls.Add(this._slackHeader);
             this.Controls.Add(this._slackInput);
             this.Controls.Add(this._slackMenu);
             this.Name = "SlackControl";
@@ -92,7 +106,8 @@
         #endregion
 
         private SlackMenu _slackMenu;
-        private View.SlackInput _slackInput;
+        private SlackInput _slackInput;
+        private SlackHeader _slackHeader;
         private SlackConversation _slackConversation;
     }
 }

@@ -39,14 +39,19 @@ namespace SlackClient
         #endregion
 
         #region Methods public
-        public void LoadConversation(SlackAdapter slackAdapter, string conversation)
+        public async void LoadConversation(SlackAdapter slackAdapter, string conversation)
         {
             _slackAdapter = slackAdapter;
+            _slackAdapter.OnMessagesUpdated += _slackAdapter_OnMessagesUpdated;
             _currentConversation = ConversationControler.History(conversation);
             this.Controls.Clear();
             this.BackColor = Color.WhiteSmoke;
 
             LoadData();
+            //Task t = new Task(LoadData);
+            //t.Start();
+            // await t; // TODO : add async way to do it
+            BuildMessagesInterface();
         }
         #endregion
 
@@ -64,10 +69,42 @@ namespace SlackClient
                     slackMessage = new SlackMessage();
                     slackMessage.LoadMessage(_slackAdapter, item);
                     slackMessage.Dock = DockStyle.Top;
-                    this.Controls.Add(slackMessage);
+                    //this.Controls.Add(slackMessage);
                     _slackAdapter.CurrentMessages.Add(slackMessage);
                 }
             }
+        }
+        private void BuildMessagesInterface()
+        {
+            foreach (SlackMessage control in _slackAdapter.CurrentMessages)
+            {
+                this.Controls.Add(control);
+            }
+            if (_slackAdapter.CurrentMessages.Count > 0)
+            { 
+                _slackAdapter.CurrentMessages[0].Select();
+                this.ScrollToControl(_slackAdapter.CurrentMessages[0]);
+            }
+        }
+        private void ParseMessage(Message msg)
+        {
+            if (msg.Channel == _currentConversation.Messages.FirstOrDefault().Channel)
+            {
+                _currentConversation.Messages.Add(msg);
+
+                SlackMessage slackMessage = new SlackMessage();
+                slackMessage.LoadMessage(_slackAdapter, msg);
+                slackMessage.Dock = DockStyle.Top;
+                this.Controls.Add(slackMessage);
+                _slackAdapter.CurrentMessages.Add(slackMessage);
+            }
+        }
+        #endregion
+
+        #region Event
+        private void _slackAdapter_OnMessagesUpdated(object o)
+        {
+            ParseMessage((Message)o);
         }
         #endregion
     }
