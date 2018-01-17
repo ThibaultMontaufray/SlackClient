@@ -12,9 +12,9 @@ namespace SlackClient
     {
         #region Attributes
         public const string LOGFILE = "log.txt";
-        public static Token CurrentToken;
         public event SlackAdapterEventHandler OnMessagesUpdated;
 
+        private Token _currentToken;
         private List<SlackMessage> _currentMessages;
         private List<Channel> _channels;
         private List<Member> _users;
@@ -29,6 +29,15 @@ namespace SlackClient
         {
             get { return _users; }
             set { _users = value; }
+        }
+        public Token CurrentToken
+        {
+            get { return _currentToken; }
+            set
+            {
+                _currentToken = value;
+                Init();
+            }
         }
         public List<Channel> Channels
         {
@@ -65,16 +74,17 @@ namespace SlackClient
         #region Constructor
         public SlackAdapter()
         {
-            Init();
         }
         #endregion
 
         #region Methods public
         public void LoadData()
         {
-            _channels = ChannelsControler.List();
-            _users = UserControler.List();
-            _team = TeamControler.Info();
+            _channels = ChannelsControler.List(this);
+            _channels.AddRange(GroupControler.List(this));
+            _channels.AddRange(ImControler.List(this));
+            _users = UserControler.List(this);
+            _team = TeamControler.Info(this);
 
             InitRtm();
         }
@@ -86,10 +96,13 @@ namespace SlackClient
                 _slackRtm.OnAck -= Instance_OnAck;
             }
 
-            _slackRtm = new SlackRtm(SlackAdapter.CurrentToken.Key);
-            _slackRtm.OnEvent += Instance_OnEvent1;
-            _slackRtm.OnAck += Instance_OnAck;
-            _slackRtm.Connect();
+            if (_currentToken != null)
+            { 
+                _slackRtm = new SlackRtm(_currentToken.Key);
+                _slackRtm.OnEvent += Instance_OnEvent1;
+                _slackRtm.OnAck += Instance_OnAck;
+                _slackRtm.Connect();
+            }
         }
         public void SendMessage(string message)
         {
@@ -104,7 +117,7 @@ namespace SlackClient
         #region Methods private
         private void Init()
         {
-            _currentUser = UserControler.GetProfile();
+            _currentUser = UserControler.GetProfile(this);
             _channels = new List<Channel>();
             _users = new List<Member>();
             _currentMessages = new List<SlackMessage>();

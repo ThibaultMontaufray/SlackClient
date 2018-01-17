@@ -10,13 +10,13 @@ namespace SlackClient.Api
     {
         private const string URL = "https://slack.com/api/api.test";
 
-        public static bool TestSuccess()
+        public static bool TestSuccess(SlackAdapter sa)
         {
             bool ret = false;
 
             try
             {
-                string answer = Accessor.JsonGet(URL);
+                string answer = Accessor.JsonGet(sa, URL);
                 Response response = Accessor.Deserialize<Response>(answer);
                 ret = response.Ok;
             }

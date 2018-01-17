@@ -88,7 +88,9 @@ namespace SlackClient
                 if (SlackAdapter.Channels != null)
                 {
                     TreeNode root = _tmpTnChannels.Nodes.Add("Channels");
-                    foreach (Channel item in SlackAdapter.Channels.Where(c => !c.Is_Archived && c.Is_Member))
+                    root.ImageIndex = -1;
+                    root.ImageKey = "";
+                    foreach (Channel item in SlackAdapter.Channels.Where(c => !c.Is_Archived && c.Is_Member).OrderBy(c => c.Name))
                     {
                         tn = new TreeNode(item.Name);
                         tn.Tag = item;
@@ -112,9 +114,11 @@ namespace SlackClient
                 if (SlackAdapter.Users != null)
                 {
                     TreeNode root = _tmpTnUsers.Nodes.Add("Members");
+                    root.ImageIndex = -1;
+                    root.ImageKey = null;
                     foreach (Member item in SlackAdapter.Users)
                     {
-                        connected = UserControler.GetStatus(item);
+                        connected = UserControler.GetStatus(_slackAdapter, item);
                         tn = new TreeNode(item.Name);
                         tn.Tag = item;
                         switch (connected.Presence)
@@ -154,8 +158,11 @@ namespace SlackClient
                     labelTitle.Text = "Slack";
                     pictureBoxIcon.Image = null;
                 }
-                labelCurrentUser.Text = _slackAdapter.CurrentUser.Profile.Real_Name;
-                SetStatus();
+                if (_slackAdapter.CurrentUser != null)
+                { 
+                    labelCurrentUser.Text = _slackAdapter.CurrentUser.Profile.Real_Name;
+                    SetStatus();
+                }
             }
             catch (Exception exp)
             {
@@ -164,18 +171,25 @@ namespace SlackClient
         }
         private void SetStatus()
         {
-            Status status = UserControler.GetStatus(_slackAdapter.CurrentUser);
-            switch (status.Presence)
+            Status status = UserControler.GetStatus(_slackAdapter, _slackAdapter.CurrentUser);
+            if (status != null &&  status.Presence != null)
+            { 
+                switch (status.Presence)
+                {
+                    case "active":
+                        pictureBoxStatus.Image = status.Last_Activity == null ? imageListStatus.Images[imageListStatus.Images.IndexOfKey("connected")] : imageListStatus.Images[imageListStatus.Images.IndexOfKey("disconnected")];
+                        break;
+                    case "away":
+                        pictureBoxStatus.Image = imageListStatus.Images[imageListStatus.Images.IndexOfKey("disconnected")];
+                        break;
+                    default:
+                        pictureBoxStatus.Image = imageListStatus.Images[imageListStatus.Images.IndexOfKey("unknow")];
+                        break;
+                }
+            }
+            else
             {
-                case "active":
-                    pictureBoxStatus.Image = status.Last_Activity == null ? imageListStatus.Images[imageListStatus.Images.IndexOfKey("connected")] : imageListStatus.Images[imageListStatus.Images.IndexOfKey("disconnected")];
-                    break;
-                case "away":
-                    pictureBoxStatus.Image = imageListStatus.Images[imageListStatus.Images.IndexOfKey("disconnected")];
-                    break;
-                default:
-                    pictureBoxStatus.Image = imageListStatus.Images[imageListStatus.Images.IndexOfKey("unknow")];
-                    break;
+                pictureBoxStatus.Image = imageListStatus.Images[imageListStatus.Images.IndexOfKey("unknow")];
             }
         }
         private void UpdateTreeNodeUsers()

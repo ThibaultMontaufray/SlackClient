@@ -30,6 +30,12 @@ namespace SlackClient
             InitializeComponent();
             Init();
         }
+        public SlackControl(SlackAdapter sa)
+        {
+            _slackAdapter = sa;
+            InitializeComponent();
+            Init();
+        }
         #endregion
 
         #region Methods public
@@ -42,14 +48,14 @@ namespace SlackClient
         #region Methods private
         private void Init()
         {
-            _slackAdapter = new SlackAdapter();
+            if (_slackAdapter == null) { _slackAdapter = new SlackAdapter(); }
             _slackMenu.LoadData(_slackAdapter);
             _slackMenu.OnChannelChanged += _slackMenu_OnChannelChanged;
             _slackMenu.OnUserChanged += _slackMenu_OnUserChanged;
             _slackInput.OnMessageSendingRequest += _slackInput_OnMessageSendingRequest;
             _slackInput.SlackAdapter = _slackAdapter;
             
-            if (_slackAdapter.Channels.Count > 0)
+            if (_slackAdapter.Channels != null && _slackAdapter.Channels.Count > 0)
             {
                 Channel defaultChannel = _slackAdapter.Channels.Where(c => c.Name.ToLower().Equals("general")).Count() > 0 ? _slackAdapter.Channels.Where(c => c.Name.ToLower().Equals("general")).FirstOrDefault() : _slackAdapter.Channels.FirstOrDefault();
                 RefreshConversation(defaultChannel);

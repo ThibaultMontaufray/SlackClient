@@ -10,13 +10,13 @@ namespace SlackClient.Apps
     {
         private const string URL = "https://slack.com/api/apps.permissions.info";
 
-        public static PermissionInfo GetInfo()
+        public static PermissionInfo GetInfo(SlackAdapter sa)
         {
             PermissionInfo pi = null;
 
             try
             {
-                string answer = Accessor.JsonGet(URL);
+                string answer = Accessor.JsonGet(sa, URL);
                 Response response = Accessor.Deserialize<Response>(answer);
                 if (response.Ok)
                 { 

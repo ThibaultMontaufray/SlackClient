@@ -65,6 +65,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="View\ButtonReaction.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="View\ButtonReaction.Designer.cs">
+      <DependentUpon>ButtonReaction.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controler\Accessor.cs" />
     <Compile Include="Controler\ApiTestControler.cs" />
     <Compile Include="Controler\AppsPermissionControler.cs" />
@@ -100,11 +106,9 @@
     <Compile Include="Model\Api\FileInfo.cs" />
     <Compile Include="Model\Api\Group.cs" />
     <Compile Include="Model\Api\GroupInfo.cs" />
-    <Compile Include="Model\Api\Groups.cs" />
     <Compile Include="Model\Api\History.cs" />
     <Compile Include="Model\Api\Icon.cs" />
     <Compile Include="Model\Api\Im.cs" />
-    <Compile Include="Model\Api\Ims.cs" />
     <Compile Include="Model\Api\Info.cs" />
     <Compile Include="Model\Api\Latest.cs" />
     <Compile Include="Model\Api\Member.cs" />
@@ -181,6 +185,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="View\ButtonReaction.resx">
+      <DependentUpon>ButtonReaction.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -224,6 +231,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\wink.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\+1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\grimacing.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\grin.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

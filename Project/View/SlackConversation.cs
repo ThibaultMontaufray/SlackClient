@@ -35,6 +35,7 @@ namespace SlackClient
         public SlackConversation()
         {
             InitializeComponent();
+            this.BackColor = Color.WhiteSmoke;
         }
         #endregion
 
@@ -43,7 +44,7 @@ namespace SlackClient
         {
             _slackAdapter = slackAdapter;
             _slackAdapter.OnMessagesUpdated += _slackAdapter_OnMessagesUpdated;
-            _currentConversation = ConversationControler.History(conversation);
+            _currentConversation = ConversationControler.History(slackAdapter, conversation);
             this.Controls.Clear();
             this.BackColor = Color.WhiteSmoke;
 

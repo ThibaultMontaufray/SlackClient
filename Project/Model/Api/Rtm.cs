@@ -14,9 +14,8 @@ namespace SlackClient
         private Self _self;
         private Users _users;
         private ChannelList _channels;
-        private GroupList _groups;
+        private List<Group> _groups;
         private List<Mpim> _mpims;
-        private ImList _ims;
         #endregion
 
         #region Properties
@@ -35,17 +34,12 @@ namespace SlackClient
             get { return _url; }
             set { _url = value; }
         }
-        public ImList Ims
-        {
-            get { return _ims; }
-            set { _ims = value; }
-        }
         public List<Mpim> Mpims
         {
             get { return _mpims; }
             set { _mpims = value; }
         }
-        public GroupList Groups
+        public List<Group> Groups
         {
             get { return _groups; }
             set { _groups = value; }

@@ -10,13 +10,13 @@ namespace SlackClient
     {
         private const string URL = "https://slack.com/api/team";
 
-        public static Team Info()
+        public static Team Info(SlackAdapter sa)
         {
             Team team = null;
 
             try
             {
-                string answer = Accessor.JsonPostFormData(URL + ".info");
+                string answer = Accessor.JsonPostFormData(sa, URL + ".info");
                 Response response = Accessor.Deserialize<Response>(answer);
                 if (response.Ok)
                 {

@@ -10,13 +10,13 @@ namespace SlackClient
     {
         private const string URL = "https://slack.com/api/users";
 
-        public static List<Member> List()
+        public static List<Member> List(SlackAdapter sa)
         {
             Users users = null;
 
             try
             {
-                string answer = Accessor.JsonPostFormData(URL + ".list");
+                string answer = Accessor.JsonPostFormData(sa, URL + ".list");
                 Response response = Accessor.Deserialize<Response>(answer);
                 if (response.Ok)
                 {
@@ -29,7 +29,7 @@ namespace SlackClient
 
             return users == null ? null : users.Members;
         }
-        public static Status GetStatus(Member user)
+        public static Status GetStatus(SlackAdapter sa, Member user)
         {
             Status status = null;
 
@@ -37,7 +37,7 @@ namespace SlackClient
             {
                 Dictionary<string, string> data = new Dictionary<string, string>();
                 data.Add("user", user.Id);
-                string answer = Accessor.JsonPostFormData(URL + ".getPresence", data);
+                string answer = Accessor.JsonPostFormData(sa, URL + ".getPresence", data);
                 Response response = Accessor.Deserialize<Response>(answer);
                 if (response.Ok)
                 {
@@ -50,13 +50,13 @@ namespace SlackClient
 
             return status;
         }
-        public static Member GetProfile()
+        public static Member GetProfile(SlackAdapter sa)
         {
             Member member = null;
 
             try
             {
-                string answer = Accessor.JsonPostFormData(URL + ".profile.get");
+                string answer = Accessor.JsonPostFormData(sa, URL + ".profile.get");
                 Response response = Accessor.Deserialize<Response>(answer);
                 if (response.Ok)
                 {

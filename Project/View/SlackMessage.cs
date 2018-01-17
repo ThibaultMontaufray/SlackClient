@@ -68,8 +68,9 @@ namespace SlackClient
                 labelDate.Text = dtDateTime.ToString("hh:mm tt");
                 _textBox.Text = _currentMessage.Text;
                 CleanTextBox();
+                AddSmileys();
+                AddReaction();
             }
-            AddSmileys();
         }
         #endregion
 
@@ -98,11 +99,24 @@ namespace SlackClient
                             //_textBox.SelectionBackColor = System.Drawing.Color.Yellow;
 
                             //Select the line from it's number
-                            int startIndex = _textBox.Find(string.Format("@{0}", user.Name));
-                            _textBox.Select(startIndex, string.Format("@{0}", user.Name).Length - 1);
 
-                            //Set the selected text fore and background color
-                            _textBox.SelectionBackColor = System.Drawing.Color.FromArgb(100, 255, 200, 0);
+                            string word = string.Format("@{0}", user.Name);
+                            int startIndex = 0;
+                            int index;
+
+                            while ((index = _textBox.Text.IndexOf(word, startIndex)) != -1)
+                            {
+                                _textBox.Select(index, word.Length);
+                                _textBox.SelectionBackColor = Color.Yellow;
+                                startIndex = index + word.Length;
+                            }
+
+
+                            //int startIndex = _textBox.Find(string.Format("@{0}", user.Name));
+                            //_textBox.Select(startIndex, string.Format("@{0}", user.Name).Length - 1);
+
+                            ////Set the selected text fore and background color
+                            //_textBox.SelectionBackColor = System.Drawing.Color.FromArgb(100, 255, 200, 0);
                         }
                     }
                 }
@@ -121,6 +135,23 @@ namespace SlackClient
             catch (Exception exp)
             {
 
+            }
+        }
+        private void AddReaction()
+        {
+            if (_currentMessage.Reactions != null)
+            {
+                int index = labelName.Left + (labelName.Width/2) + 5;
+                ButtonReaction br;
+                foreach (Reaction reaction in _currentMessage.Reactions)
+                {
+                    br = new ButtonReaction();
+                    br.LoadReaction(reaction);
+                    br.Top = labelDate.Top - 2;
+                    br.Left = index;
+                    index += br.Width + 2;
+                    this.Controls.Add(br);
+                }
             }
         }
         private void ProcessSmiley(string smileyName)
@@ -147,7 +178,7 @@ namespace SlackClient
         private void ResizeComponent()
         {
             Size lengthText = TextRenderer.MeasureText(_textBox.Text, _textBox.Font);
-            int boxWidth = this.Width;
+            int boxWidth = this.Width == 0 ? 3 : this.Width;
             _textBox.Height = (lengthText.Width * 18) / (boxWidth / 3);
             if (_textBox.Height < 18) { _textBox.Height = 18; }
             this.Height = _textBox.Height + 33;

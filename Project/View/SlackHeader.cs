@@ -29,6 +29,8 @@ namespace SlackClient
         public void LoadData(SlackAdapter slackAdapter)
         {
             labelChannel.Text = "#" + slackAdapter.CurrentChannel.Name;
+            labelMembers.Left = labelChannel.Left + labelChannel.Width + 5;
+            labelMembers.Text = slackAdapter.CurrentChannel.Members.Count() + " Members";
         }
         #endregion
 

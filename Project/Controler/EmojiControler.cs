@@ -10,13 +10,13 @@ namespace SlackClient
     {
         private const string URL = "https://slack.com/api/emoji";
 
-        public static Emoji List()
+        public static Emoji List(SlackAdapter sa)
         {
             Emojis emojis = null;
 
             try
             {
-                string answer = Accessor.JsonPostFormData(URL + ".list");
+                string answer = Accessor.JsonPostFormData(sa, URL + ".list");
                 Response response = Accessor.Deserialize<Response>(answer);
                 if (response.Ok)
                 {

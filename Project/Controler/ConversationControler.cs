@@ -10,7 +10,7 @@ namespace SlackClient
     {
         private const string URL = "https://slack.com/api/conversations";
 
-        public static Conversation History(string channel)
+        public static Conversation History(SlackAdapter sa, string channel)
         {
             Conversation conversation = null;
 
@@ -18,7 +18,7 @@ namespace SlackClient
             {
                 Dictionary<string, string> data = new Dictionary<string, string>();
                 data.Add("channel", channel);
-                string answer = Accessor.JsonPostFormData(URL + ".history", data);
+                string answer = Accessor.JsonPostFormData(sa, URL + ".history", data);
                 Response response = Accessor.Deserialize<Response>(answer);
                 if (response.Ok)
                 {

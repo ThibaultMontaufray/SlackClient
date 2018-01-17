@@ -41,6 +41,7 @@
             this.imageListStatus = new System.Windows.Forms.ImageList(this.components);
             this.panelChannels = new System.Windows.Forms.Panel();
             this.panelUsers = new System.Windows.Forms.Panel();
+            this.imageListChannel = new System.Windows.Forms.ImageList(this.components);
             this.panelHeader.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxStatus)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxIcon)).BeginInit();
@@ -127,8 +128,11 @@
             this._treeViewChannels.Dock = System.Windows.Forms.DockStyle.Fill;
             this._treeViewChannels.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this._treeViewChannels.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this._treeViewChannels.ImageIndex = 0;
+            this._treeViewChannels.ImageList = this.imageListChannel;
             this._treeViewChannels.Location = new System.Drawing.Point(0, 0);
             this._treeViewChannels.Name = "_treeViewChannels";
+            this._treeViewChannels.SelectedImageIndex = 0;
             this._treeViewChannels.ShowLines = false;
             this._treeViewChannels.ShowPlusMinus = false;
             this._treeViewChannels.ShowRootLines = false;
@@ -182,6 +186,13 @@
             this.panelUsers.Size = new System.Drawing.Size(350, 393);
             this.panelUsers.TabIndex = 5;
             // 
+            // imageListChannel
+            // 
+            this.imageListChannel.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListChannel.ImageStream")));
+            this.imageListChannel.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageListChannel.Images.SetKeyName(0, "hash");
+            this.imageListChannel.Images.SetKeyName(1, "lock");
+            // 
             // SlackMenu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -217,5 +228,6 @@
         private System.Windows.Forms.ImageList imageListStatus;
         private System.Windows.Forms.Label labelCurrentUser;
         private System.Windows.Forms.PictureBox pictureBoxStatus;
+        private System.Windows.Forms.ImageList imageListChannel;
     }
 }

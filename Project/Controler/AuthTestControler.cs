@@ -10,13 +10,13 @@ namespace SlackClient.Auth
     {
         private const string URL = "https://slack.com/api/auth.test";
 
-        public static Authorisation Get()
+        public static Authorisation Get(SlackAdapter sa)
         {
             Authorisation auth = null;
 
             try
             {
-                string answer = Accessor.JsonPostFormData(URL);
+                string answer = Accessor.JsonPostFormData(sa, URL);
                 Response response = Accessor.Deserialize<Response>(answer);
                 if (response.Ok)
                 {

@@ -10,24 +10,24 @@ namespace SlackClient
     {
         private const string URL = "https://slack.com/api/groups";
 
-        public static List<Group> List()
+        public static List<Group> List(SlackAdapter sa)
         {
-            GroupList groups = null;
+            List<Group> groups = new List<Group>();
 
             try
             {
-                string answer = Accessor.JsonPostFormData(URL + ".list");
+                string answer = Accessor.JsonPostFormData(sa, URL + ".list");
                 Response response = Accessor.Deserialize<Response>(answer);
                 if (response.Ok)
                 {
-                    groups = Accessor.Deserialize<GroupList>(answer);
+                    groups = Accessor.Deserialize<List<Group>>(answer);
                 }
             }
             catch
             {
             }
 
-            return groups == null ? null : groups.Groups;
+            return groups;
         }
     }
 }

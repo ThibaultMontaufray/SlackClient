@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.labelChannel = new System.Windows.Forms.Label();
+            this.labelMembers = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // labelChannel
@@ -42,11 +43,23 @@
             this.labelChannel.TabIndex = 7;
             this.labelChannel.Text = "Channel";
             // 
+            // labelMembers
+            // 
+            this.labelMembers.AutoSize = true;
+            this.labelMembers.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.labelMembers.Font = new System.Drawing.Font("Calibri", 12F);
+            this.labelMembers.Location = new System.Drawing.Point(90, 12);
+            this.labelMembers.Name = "labelMembers";
+            this.labelMembers.Size = new System.Drawing.Size(82, 19);
+            this.labelMembers.TabIndex = 8;
+            this.labelMembers.Text = "0 Members";
+            // 
             // SlackHeader
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.Controls.Add(this.labelMembers);
             this.Controls.Add(this.labelChannel);
             this.Name = "SlackHeader";
             this.Size = new System.Drawing.Size(910, 40);
@@ -58,5 +71,6 @@
         #endregion
 
         private System.Windows.Forms.Label labelChannel;
+        private System.Windows.Forms.Label labelMembers;
     }
 }

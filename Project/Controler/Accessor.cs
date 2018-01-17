@@ -27,11 +27,11 @@ namespace SlackClient
         #endregion
 
         #region Methods public
-        public static string JsonGet(string url, Dictionary<string, string> headers = null)
+        public static string JsonGet(SlackAdapter slackAdapter, string url, Dictionary<string, string> headers = null)
         {
             WebRequest webRequest = WebRequest.Create(url);
             webRequest.Method = "GET";
-            webRequest.Headers.Add(TOKENHEADER, SlackAdapter.CurrentToken.Key);
+            webRequest.Headers.Add(TOKENHEADER, slackAdapter.CurrentToken.Key);
             if (headers != null) { foreach (var item in headers) { webRequest.Headers.Add(item.Key, item.Value); } }
             WebResponse response = webRequest.GetResponse();
 
@@ -41,7 +41,7 @@ namespace SlackClient
                 return reader.ReadToEnd();
             }
         }
-        public static string JsonPost(string url, string data = "", Dictionary<string, string> headers = null)
+        public static string JsonPost(SlackAdapter slackAdapter, string url, string data = "", Dictionary<string, string> headers = null)
         {
             try
             {
@@ -50,7 +50,7 @@ namespace SlackClient
                 webRequest.Method = "POST";
                 webRequest.ContentType = "application/json";
                 webRequest.ContentLength = dataStream.Length;
-                webRequest.Headers.Add(TOKENHEADER, SlackAdapter.CurrentToken.Key);
+                webRequest.Headers.Add(TOKENHEADER, slackAdapter.CurrentToken.Key);
                 if (headers != null) { foreach (var item in headers) { webRequest.Headers.Add(item.Key, item.Value); } }
 
                 Stream newStream = webRequest.GetRequestStream();
@@ -75,7 +75,7 @@ namespace SlackClient
                 }
             }
         }
-        public static string JsonPostFormData(string url, Dictionary<string, string> data = null)
+        public static string JsonPostFormData(SlackAdapter slackAdapter, string url, Dictionary<string, string> data = null)
         {
             try
             {
@@ -87,7 +87,7 @@ namespace SlackClient
                         outgoingQueryString.Add(item.Key, item.Value);
                     }
                 }
-                outgoingQueryString.Add(TOKENHEADER, SlackAdapter.CurrentToken.Key);
+                outgoingQueryString.Add(TOKENHEADER, slackAdapter.CurrentToken.Key);
                 string postdata = outgoingQueryString.ToString();
 
                 url += "?" + postdata;

@@ -10,17 +10,17 @@ namespace SlackClient
     {
         private const string URL = "https://slack.com/api/im";
 
-        public static ImList List()
+        public static List<Im> List(SlackAdapter sa)
         {
-            ImList ims = null;
+            List<Im> ims = null;
 
             try
             {
-                string answer = Accessor.JsonPostFormData(URL + ".list");
+                string answer = Accessor.JsonPostFormData(sa, URL + ".list");
                 Response response = Accessor.Deserialize<Response>(answer);
                 if (response.Ok)
                 {
-                    ims = Accessor.Deserialize<ImList>(answer);
+                    ims = Accessor.Deserialize<List<Im>>(answer);
                 }
             }
             catch
