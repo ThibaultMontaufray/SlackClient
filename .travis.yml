@@ -1,8 +1,17 @@
 language: csharp
 solution: Project/SlackClient.sln
 mono: latest
+# matrix:
+#   include:
+#     - os: linux
+#       mono: 4.6.2
+#     - os: linux
+#       mono: latest
+#     - os: osx
+#       mono: latest
 notifications:
   email: false
+  
 # install:
 #   - nuget restore Project/SlackClient.sln
 #   - nuget install NUnit.Runners -Version 2.6.4 -OutputDirectory testrunner
